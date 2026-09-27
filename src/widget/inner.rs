@@ -55,6 +55,11 @@ pub enum TuiWidgetEvent {
     FocusKey,
     PrevPageKey,
     NextPageKey,
+    /// Scroll up one line. Needs a log view of at least 3 lines.
+    PrevLineKey,
+    /// Scroll down one line, and follow the log again once at the bottom.
+    /// Needs a log view of at least 3 lines.
+    NextLineKey,
     EscapeKey,
 }
 
@@ -66,6 +71,8 @@ pub struct TuiWidgetInnerState {
     pub(crate) opt_line_pointer_center: Option<LinePointer>,
     pub(crate) opt_line_pointer_next_page: Option<LinePointer>,
     pub(crate) opt_line_pointer_prev_page: Option<LinePointer>,
+    pub(crate) opt_line_pointer_next_line: Option<LinePointer>,
+    pub(crate) opt_line_pointer_prev_line: Option<LinePointer>,
     pub(crate) opt_selected_target: Option<String>,
     pub(crate) opt_selected_visibility_more: Option<LevelFilter>,
     pub(crate) opt_selected_visibility_less: Option<LevelFilter>,
@@ -134,6 +141,13 @@ impl TuiWidgetInnerState {
             }
             PrevPageKey => self.opt_line_pointer_center = self.opt_line_pointer_prev_page,
             NextPageKey => self.opt_line_pointer_center = self.opt_line_pointer_next_page,
+            PrevLineKey => {
+                // Unlike PrevPageKey, stay at the top instead of wrapping to the bottom
+                if self.opt_line_pointer_prev_line.is_some() {
+                    self.opt_line_pointer_center = self.opt_line_pointer_prev_line;
+                }
+            }
+            NextLineKey => self.opt_line_pointer_center = self.opt_line_pointer_next_line,
             EscapeKey => self.opt_line_pointer_center = None,
         }
     }

@@ -100,6 +100,11 @@ reference. This means, changing the filters in the EWIDT/focus from the target s
 should work as expected without jumps in the history. The page next/forward advances as
 per visibility of the events.
 
+For finer control, TuiWidgetEvent::PrevLineKey and TuiWidgetEvent::NextLineKey scroll the log
+view by a single line. PrevLineKey stops at the oldest line, and NextLineKey returns to
+following the log once the newest line is reached. This needs a log view of at least 3 lines.
+The example `scroll_line` maps them to the UP/DOWN keys.
+
 ### Basic usage to initialize logger-system:
 ```rust
 #[macro_use]
