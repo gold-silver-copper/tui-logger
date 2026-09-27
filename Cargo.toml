@@ -59,3 +59,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 [[example]]
 name="demo"
 required-features=["feature_crossterm_or_termion_must_be_selected"]
+
+[[example]]
+name="scroll_line"
+required-features=["crossterm"]

@@ -522,6 +522,22 @@ impl<'b> Widget for TuiLoggerWidget<'b> {
         } else {
             None
         };
+        // The lines just above and below the center row of the view. Taking them
+        // from what is displayed (not from the center pointer) keeps the step at
+        // one line when the view is clamped to the top or bottom.
+        let center_row = la_height / 2;
+        let line_at_row =
+            |row: usize| (row < rev_lines.len()).then(|| rev_lines[rev_lines.len() - 1 - row].0);
+        state.opt_line_pointer_next_line = if can_scroll_down {
+            line_at_row(center_row + 1)
+        } else {
+            None
+        };
+        state.opt_line_pointer_prev_line = if can_scroll_up {
+            center_row.checked_sub(1).and_then(line_at_row)
+        } else {
+            None
+        };
 
         if render_debug {
             println!("Line pointers in buffer:");
